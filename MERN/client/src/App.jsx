@@ -9,7 +9,7 @@ function App(){
   const [course, setCourse] = useState("");
   const [age, setAge] = useState("");
 
-  const API = "http://localhost:5000/students";
+  const API = "/students";
 
   const loadStudents = async () => {
     axios.get(API).then((res) => 

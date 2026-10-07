@@ -28,9 +28,11 @@ app.get("/", (req, res) =>{
     res.send("Server is running!");
 });
 
-app.listen(5000, ()=> {
+if (process.env.NODE_ENV !== "production") {
+  app.listen(5000, () => {
     console.log("Server running on port 5000");
-})
+  });
+}
 
 app.get("/students", async (req, res) =>{
     res.json(await Student.find());
@@ -56,3 +58,4 @@ app.delete('/students/:id', (req, res) => {
     .catch((error) => res.status(500).json({ error: 'Failed to delete student' }));
 });    
 
+module.exports = app;
