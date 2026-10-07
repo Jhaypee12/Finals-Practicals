@@ -45,7 +45,6 @@ app.post("/students", async (req, res) =>{
 
 app.put("/students/:id", async(req,res)=>{
 const student = await Student.findById(req.params.id);
-student.id = Student.findById(req.params.id);
 student.name = req.body.name;
 student.course = req.body.course;
 student.age = req.body.age;
