@@ -8,15 +8,47 @@ function App(){
   const [name, setName] = useState("");
   const [course, setCourse] = useState("");
   const [age, setAge] = useState("");
-  const [editingId, setEditingId] = useState(null);
 
-const API = import.meta.env.DEV ? "http://localhost:5000/api/students" : "/api/students";
+  const API = "http://localhost:5000/api/students";
 
   const loadStudents = async () => {
     axios.get(API).then((res) => 
     setStudents(res.data)
     );
   };
+
+  useEffect(() => {
+    loadStudents();
+  }, []);
+
+  const addStudent = () => {
+    axios.post(API, { name, course, age }).then ((res) => {
+    loadStudents();
+    setName("");
+    setCourse("");
+    setAge("");
+  });
+  };
+
+  const editStudent = (id) => {
+    axios.put(`${API}/${id}`, { name: student._id.name, course, age }).then((res) => {
+      document.getElementById("name").value = name;
+      document.getElementById("course").value = course;
+      document.getElementById("age").value = age;
+      document.getElementById("add-student").innerText = "Update Student";
+    });
+  }
+
+  const deleteStudent = (id) => {
+    try{
+    axios.delete(`${API}/${id}`).then((res) => {
+      loadStudents();
+    });
+    }
+    catch (error) {
+      console.error("Error deleting student:", error);
+    }
+  }
 
   useEffect(() => { 
     axios
@@ -26,41 +58,23 @@ const API = import.meta.env.DEV ? "http://localhost:5000/api/students" : "/api/s
     });
   }, []);
 
-  const addStudent = () => {
-    (editingId ? axios.put(`${API}/${editingId}`, { name, course, age }) : axios.post(API, { name, course, age })).then(() => {
-    loadStudents();
-    setName("");
-    setCourse("");
-    setAge("");
-    setEditingId(null);
-  });
-  };
-
-  const editStudent = (student) => {
-    setName(student.name);
-    setCourse(student.course);
-    setAge(student.age);
-    setEditingId(student._id);
-  };
-
-  const deleteStudent = (id) => {
-    try{
-    axios.delete(`${API}/${id}`).then(() => {
-      loadStudents();
-    });
-    }
-    catch (error) {
-      console.error("Error deleting student:", error);
-    }
-  }
-
-
-
   return (
     <div>
       <h1>Student Management System</h1>
 
+      <h2>Students</h2>
 
+      {students.map((student) =>(
+        <div key={student._id}>
+          <p>ID: {student._id}</p>
+          <p>Name: {student.name}</p>
+          <p>Course: {student.course}</p>
+          <p>Age: {student.age}</p>
+        
+        <button onClick={() => editStudent(student._id)}>Edit</button>
+        <button onClick={() => deleteStudent(student._id)}>Delete</button>
+        </div>
+      ))}
 
 <br/>
       <h2>Add Student</h2>
@@ -89,24 +103,8 @@ const API = import.meta.env.DEV ? "http://localhost:5000/api/students" : "/api/s
           onChange={(e) => setAge(e.target.value)}
         />
         <br/>
-        <button onClick={addStudent}>{editingId ? "Update Student" : "Add Student"}</button>
+        <button id="add-student" onClick={addStudent}>Add Student</button>
    
-   <br/>
-      <h2>Students</h2>
-
-      {students.map((student) =>(
-        <div key={student._id}>
-          <p>ID: {student._id}</p>
-          <p>Name: {student.name}</p>
-          <p>Course: {student.course}</p>
-          <p>Age: {student.age}</p>
-        
-        <button onClick={() => editStudent(student)}>Edit</button>
-        <button onClick={() => deleteStudent(student._id)}>Delete</button>
-        </div>
-      ))}
-
-
     </div>
   );
 }
