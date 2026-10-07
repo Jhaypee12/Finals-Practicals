@@ -10,12 +10,15 @@ function App() {
   const [age, setAge] = useState("");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   const loadStudents = () => {
     axios
       .get(API)
       .then((res) => setStudents(Array.isArray(res.data) ? res.data : []))
       .catch((error) => console.error("Error loading students:", error));
 =======
+=======
+>>>>>>> parent of 50de225 (Update App.jsx)
   const API = "http://localhost:5000/api/students";
 
   const loadStudents = async () => {
@@ -36,6 +39,7 @@ function App() {
     setEditingId(null);
   };
 
+<<<<<<< HEAD
   const addStudent = () => {
     axios
       .post(API, { name, course, age })
@@ -64,6 +68,8 @@ function App() {
       .catch((error) => console.error("Error updating student:", error));
   };
 =======
+=======
+>>>>>>> parent of 50de225 (Update App.jsx)
   const editStudent = (id) => {
     axios.put(`${API}/${id}`, { name, course, age }).then(() => {
       document.getElementById("name").value = name;
@@ -72,6 +78,9 @@ function App() {
       document.getElementById("add-student").innerText = "Update Student";
     });
   }
+<<<<<<< HEAD
+>>>>>>> parent of 50de225 (Update App.jsx)
+=======
 >>>>>>> parent of 50de225 (Update App.jsx)
 
   const deleteStudent = (id) => {
@@ -117,6 +126,9 @@ function App() {
         <br/>
         <button id="add-student" onClick={addStudent}>Add Student</button>
         
+<<<<<<< HEAD
+>>>>>>> parent of 50de225 (Update App.jsx)
+=======
 >>>>>>> parent of 50de225 (Update App.jsx)
       <h2>Students</h2>
       {students.map((student) => (
