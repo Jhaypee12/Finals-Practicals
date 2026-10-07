@@ -8,8 +8,9 @@ function App(){
   const [name, setName] = useState("");
   const [course, setCourse] = useState("");
   const [age, setAge] = useState("");
+  const [editingId, setEditingId] = useState(null);
 
-  const API = "http://localhost:5000/api/students";
+  const API = "/students";
 
   const loadStudents = async () => {
     axios.get(API).then((res) => 
@@ -30,14 +31,22 @@ function App(){
   });
   };
 
-  const editStudent = (id) => {
-    axios.put(`${API}/${id}`, { name, course, age }).then(() => {
-      document.getElementById("name").value = name;
-      document.getElementById("course").value = course;
-      document.getElementById("age").value = age;
-      document.getElementById("add-student").innerText = "Update Student";
-    });
-  }
+  const editStudent = (student) => {
+    setName(student.name);
+    setCourse(student.course);
+    setAge(student.age);
+    setEditingId(student._id);
+  };
+
+  const updateStudent = () => {
+  axios.put(`${API}/${editingId}`, { name, course, age }).then(() => {
+    loadStudents();
+    setName("");
+    setCourse("");
+    setAge("");
+    setEditingId(null);
+  });
+};
 
   const deleteStudent = (id) => {
     try{
@@ -92,8 +101,11 @@ function App(){
           onChange={(e) => setAge(e.target.value)}
         />
         <br/>
-        <button id="add-student" onClick={addStudent}>Add Student</button>
-        
+        <button id="add-student" onClick={editingId ? updateStudent : addStudent}>
+          {editingId ? "Update Student" : "Add Student"}
+        </button>
+        <br/>
+        <br/>
       <h2>Students</h2>
 
       {students.map((student) =>(
@@ -103,7 +115,7 @@ function App(){
           <p>Course: {student.course}</p>
           <p>Age: {student.age}</p>
         
-        <button onClick={() => editStudent(student._id)}>Edit</button>
+        <button onClick={() => editStudent(student)}>Edit</button>
         <button onClick={() => deleteStudent(student._id)}>Delete</button>
         </div>
       ))}
