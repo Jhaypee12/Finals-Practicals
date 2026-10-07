@@ -10,7 +10,7 @@ function App(){
   const [age, setAge] = useState("");
   const [editingId, setEditingId] = useState(null);
 
-  const API = "/students";
+  const API = "/api/students";
 
   const loadStudents = async () => {
     axios.get(API).then((res) => 
