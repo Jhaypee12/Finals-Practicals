@@ -60,23 +60,12 @@ function App(){
 
   return (
     <div>
+
+
       <h1>Student Management System</h1>
 
-      <h2>Students</h2>
 
-      {students.map((student) =>(
-        <div key={student._id}>
-          <p>ID: {student._id}</p>
-          <p>Name: {student.name}</p>
-          <p>Course: {student.course}</p>
-          <p>Age: {student.age}</p>
-        
-        <button onClick={() => editStudent(student._id)}>Edit</button>
-        <button onClick={() => deleteStudent(student._id)}>Delete</button>
-        </div>
-      ))}
-
-<br/>
+      <br/>
       <h2>Add Student</h2>
         
         <input
@@ -104,6 +93,22 @@ function App(){
         />
         <br/>
         <button id="add-student" onClick={addStudent}>Add Student</button>
+        
+      <h2>Students</h2>
+
+      {students.map((student) =>(
+        <div key={student._id}>
+          <p>ID: {student._id}</p>
+          <p>Name: {student.name}</p>
+          <p>Course: {student.course}</p>
+          <p>Age: {student.age}</p>
+        
+        <button onClick={() => editStudent(student._id)}>Edit</button>
+        <button onClick={() => deleteStudent(student._id)}>Delete</button>
+        </div>
+      ))}
+
+
    
     </div>
   );
