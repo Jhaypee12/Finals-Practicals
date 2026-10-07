@@ -10,7 +10,7 @@ function App(){
   const [age, setAge] = useState("");
   const [editingId, setEditingId] = useState(null);
 
-  const API = "/api/students";
+  const API = "/students";
 
   const loadStudents = async () => {
     axios.get(API).then((res) => 
@@ -49,27 +49,27 @@ function App(){
 };
 
   const deleteStudent = (id) => {
-    try{
-    axios.delete(`${API}/${id}`).then(() => {
-      loadStudents();
-    });
-    }
-    catch (error) {
-      console.error("Error deleting student:", error);
-    }
-  }
-
-  useEffect(() => { 
-    axios
-    .get(API)
-    .then((response)=>{
-      setStudents(response.data);
-    });
-  }, []);
+    axios.delete(`${API}/${id}`)
+      .then(() => loadStudents())
+      .catch((error) => console.error("Error deleting student:", error));
+  };
 
   return (
     <div>
+      <h2>Students</h2>
 
+      {students.map((student) =>(
+        <div key={student._id}>
+          <p>ID: {student._id}</p> 
+          <p>Name: {student.name}</p>
+          <p>Course: {student.course}</p>
+          <p>Age: {student.age}</p>
+        
+        <button onClick={() => editStudent(student)}>Edit</button>
+        <button onClick={() => deleteStudent(student._id)}>Delete</button>
+        </div>
+      ))} 
+      <br/>
 
       <h1>Student Management System</h1>
 
@@ -106,19 +106,7 @@ function App(){
         </button>
         <br/>
         <br/>
-      <h2>Students</h2>
-
-      {students.map((student) =>(
-        <div key={student._id}>
-          <p>ID: {student._id}</p>
-          <p>Name: {student.name}</p>
-          <p>Course: {student.course}</p>
-          <p>Age: {student.age}</p>
-        
-        <button onClick={() => editStudent(student)}>Edit</button>
-        <button onClick={() => deleteStudent(student._id)}>Delete</button>
-        </div>
-      ))}
+      
 
 
    

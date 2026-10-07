@@ -18,7 +18,6 @@ mongoose
  });
 
 const Student = mongoose.model("Student", {
-    id: Number,
   name: String,
   course: String,
   age: Number
@@ -28,33 +27,30 @@ app.get("/", (req, res) =>{
     res.send("Server is running!");
 });
 
-app.listen(5000, ()=> {
-    console.log("Server running on port 5000");
-})
-
-app.get("/api/students", async (req, res) =>{
+app.get("/students", async (req, res) =>{
     res.json(await Student.find());
 });
 
-app.post("/api/students", async (req, res) =>{
+app.post("/students", async (req, res) =>{
     const student = new Student(req.body);
     res.json(await student.save());
 });
 
-app.put("/api/students/:id", async(req,res)=>{
-const student = await Student.findById(req.params.id);
-student.id = Student.findById(req.params.id);
-student.name = req.body.name;
-student.course = req.body.course;
-student.age = req.body.age;
-res.json(await student.save());
+app.put("/students/:id", async(req,res)=>{
+    const student = await Student.findById(req.params.id);
+    if (!student) return res.status(404).json({ error: "Student not found" });
+    student.name = req.body.name;
+    student.course = req.body.course;
+    student.age = req.body.age;
+    res.json(await student.save());
 });
 
-app.delete('/api/students/:id', (req, res) => {
+app.delete('/students/:id', (req, res) => {
     Student.findByIdAndDelete(req.params.id)
     .then(() => res.json({ message: 'Student deleted successfully' }))
     .catch((error) => res.status(500).json({ error: 'Failed to delete student' }));
 });    
 
-
-module.exports = app;
+app.listen(5000, ()=> {
+    console.log("Server running on port 5000");
+})
