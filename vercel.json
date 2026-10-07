@@ -5,7 +5,7 @@
     "server": { "root": "MERN/server", "framework": "express", "entrypoint": "server.js" }
   },
   "rewrites": [
-    { "source": "/students(.*)", "destination": { "service": "server" } },
+    { "source": "/api/(.*)", "destination": { "service": "server" } },
     { "source": "/(.*)", "destination": { "service": "client" } }
   ]
 }

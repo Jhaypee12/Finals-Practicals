@@ -28,7 +28,7 @@ app.get("/", (req, res) =>{
     res.send("Server is running!");
 });
 
-app.listen(5000, ()=> {
+if (!process.env.VERCEL) app.listen(5000, ()=> {
     console.log("Server running on port 5000");
 })
 
@@ -43,7 +43,6 @@ app.post("/api/students", async (req, res) =>{
 
 app.put("/api/students/:id", async(req,res)=>{
 const student = await Student.findById(req.params.id);
-student.id = Student.findById(req.params.id);
 student.name = req.body.name;
 student.course = req.body.course;
 student.age = req.body.age;
@@ -65,3 +64,5 @@ let students = [
         age: 20
     }
 ];
+
+module.exports = app;
