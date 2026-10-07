@@ -1,34 +1,41 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-function App(){
+const API = "/api/students";
 
+function App() {
   const [students, setStudents] = useState([]);
-
   const [name, setName] = useState("");
   const [course, setCourse] = useState("");
   const [age, setAge] = useState("");
   const [editingId, setEditingId] = useState(null);
 
-  const API = "/students";
-
-  const loadStudents = async () => {
-    axios.get(API).then((res) => 
-    setStudents(res.data)
-    );
+  const loadStudents = () => {
+    axios
+      .get(API)
+      .then((res) => setStudents(Array.isArray(res.data) ? res.data : []))
+      .catch((error) => console.error("Error loading students:", error));
   };
 
   useEffect(() => {
     loadStudents();
   }, []);
 
-  const addStudent = () => {
-    axios.post(API, { name, course, age }).then (() => {
-    loadStudents();
+  const resetForm = () => {
     setName("");
     setCourse("");
     setAge("");
-  });
+    setEditingId(null);
+  };
+
+  const addStudent = () => {
+    axios
+      .post(API, { name, course, age })
+      .then(() => {
+        loadStudents();
+        resetForm();
+      })
+      .catch((error) => console.error("Error adding student:", error));
   };
 
   const editStudent = (student) => {
@@ -39,77 +46,68 @@ function App(){
   };
 
   const updateStudent = () => {
-  axios.put(`${API}/${editingId}`, { name, course, age }).then(() => {
-    loadStudents();
-    setName("");
-    setCourse("");
-    setAge("");
-    setEditingId(null);
-  });
-};
+    axios
+      .put(`${API}/${editingId}`, { name, course, age })
+      .then(() => {
+        loadStudents();
+        resetForm();
+      })
+      .catch((error) => console.error("Error updating student:", error));
+  };
 
   const deleteStudent = (id) => {
-    axios.delete(`${API}/${id}`)
+    axios
+      .delete(`${API}/${id}`)
       .then(() => loadStudents())
       .catch((error) => console.error("Error deleting student:", error));
   };
 
   return (
     <div>
-      <h2>Students</h2>
+      <h1>Student Management System</h1>
 
-      {students.map((student) =>(
+      <h2>Students</h2>
+      {students.map((student) => (
         <div key={student._id}>
-          <p>ID: {student._id}</p> 
+          <p>ID: {student._id}</p>
           <p>Name: {student.name}</p>
           <p>Course: {student.course}</p>
           <p>Age: {student.age}</p>
-        
-        <button onClick={() => editStudent(student)}>Edit</button>
-        <button onClick={() => deleteStudent(student._id)}>Delete</button>
+          <button onClick={() => editStudent(student)}>Edit</button>
+          <button onClick={() => deleteStudent(student._id)}>Delete</button>
         </div>
-      ))} 
-      <br/>
+      ))}
 
-      <h1>Student Management System</h1>
+      <br />
+      <h2>{editingId ? "Edit Student" : "Add Student"}</h2>
 
-
-      <br/>
-      <h2>Add Student</h2>
-        
-        <input
-          type="text"
-          id="name"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <br/>
-        <input
-          type="text"
-          id="course"
-          placeholder="Course"
-          value={course}
-          onChange={(e) => setCourse(e.target.value)}
-        />
-        <br/>
-        <input
-          type="number"
-          id="age"
-          placeholder="Age"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-        />
-        <br/>
-        <button id="add-student" onClick={editingId ? updateStudent : addStudent}>
-          {editingId ? "Update Student" : "Add Student"}
-        </button>
-        <br/>
-        <br/>
-      
-
-
-   
+      <input
+        type="text"
+        id="name"
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <br />
+      <input
+        type="text"
+        id="course"
+        placeholder="Course"
+        value={course}
+        onChange={(e) => setCourse(e.target.value)}
+      />
+      <br />
+      <input
+        type="number"
+        id="age"
+        placeholder="Age"
+        value={age}
+        onChange={(e) => setAge(e.target.value)}
+      />
+      <br />
+      <button id="add-student" onClick={editingId ? updateStudent : addStudent}>
+        {editingId ? "Update Student" : "Add Student"}
+      </button>
     </div>
   );
 }
