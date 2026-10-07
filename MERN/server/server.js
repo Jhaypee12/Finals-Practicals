@@ -7,10 +7,6 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use((req, res, next) => {
-  console.log(req.method, req.url);
-  next();
-});
 
 mongoose
  .connect(process.env.MONGO_URI)
@@ -32,11 +28,9 @@ app.get("/", (req, res) =>{
     res.send("Server is running!");
 });
 
-if (process.env.NODE_ENV !== "production") {
-    app.listen(5000, ()=> {
-        console.log("Server running on port 5000");
-    });
-}
+app.listen(5000, ()=> {
+    console.log("Server running on port 5000");
+})
 
 app.get("/api/students", async (req, res) =>{
     res.json(await Student.find());
@@ -49,6 +43,7 @@ app.post("/api/students", async (req, res) =>{
 
 app.put("/api/students/:id", async(req,res)=>{
 const student = await Student.findById(req.params.id);
+student.id = Student.findById(req.params.id);
 student.name = req.body.name;
 student.course = req.body.course;
 student.age = req.body.age;
@@ -61,14 +56,5 @@ app.delete('/api/students/:id', (req, res) => {
     .catch((error) => res.status(500).json({ error: 'Failed to delete student' }));
 });    
 
-
-let students = [
-    {
-        id: 1,
-        name: "Juan Dela Cruz",
-        course: "BSIT",
-        age: 20
-    }
-];
 
 module.exports = app;
