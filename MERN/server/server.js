@@ -18,6 +18,7 @@ mongoose
  });
 
 const Student = mongoose.model("Student", {
+    id: Number,
   name: String,
   course: String,
   age: Number
@@ -26,6 +27,10 @@ const Student = mongoose.model("Student", {
 app.get("/", (req, res) =>{
     res.send("Server is running!");
 });
+
+app.listen(5000, ()=> {
+    console.log("Server running on port 5000");
+})
 
 app.get("/students", async (req, res) =>{
     res.json(await Student.find());
@@ -37,12 +42,12 @@ app.post("/students", async (req, res) =>{
 });
 
 app.put("/students/:id", async(req,res)=>{
-    const student = await Student.findById(req.params.id);
-    if (!student) return res.status(404).json({ error: "Student not found" });
-    student.name = req.body.name;
-    student.course = req.body.course;
-    student.age = req.body.age;
-    res.json(await student.save());
+const student = await Student.findById(req.params.id);
+student.id = Student.findById(req.params.id);
+student.name = req.body.name;
+student.course = req.body.course;
+student.age = req.body.age;
+res.json(await student.save());
 });
 
 app.delete('/students/:id', (req, res) => {
@@ -51,6 +56,3 @@ app.delete('/students/:id', (req, res) => {
     .catch((error) => res.status(500).json({ error: 'Failed to delete student' }));
 });    
 
-app.listen(5000, ()=> {
-    console.log("Server running on port 5000");
-})
