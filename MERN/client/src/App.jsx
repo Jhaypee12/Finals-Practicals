@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const API = "/api/students";
+const API = "/students";
 
 function App() {
   const [students, setStudents] = useState([]);
