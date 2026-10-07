@@ -22,7 +22,7 @@ function App(){
   }, []);
 
   const addStudent = () => {
-    axios.post(API, { name, course, age }).then ((res) => {
+    axios.post(API, { name, course, age }).then (() => {
     loadStudents();
     setName("");
     setCourse("");
@@ -31,7 +31,7 @@ function App(){
   };
 
   const editStudent = (id) => {
-    axios.put(`${API}/${id}`, { name: student._id.name, course, age }).then((res) => {
+    axios.put(`${API}/${id}`, { name, course, age }).then(() => {
       document.getElementById("name").value = name;
       document.getElementById("course").value = course;
       document.getElementById("age").value = age;
@@ -41,7 +41,7 @@ function App(){
 
   const deleteStudent = (id) => {
     try{
-    axios.delete(`${API}/${id}`).then((res) => {
+    axios.delete(`${API}/${id}`).then(() => {
       loadStudents();
     });
     }
